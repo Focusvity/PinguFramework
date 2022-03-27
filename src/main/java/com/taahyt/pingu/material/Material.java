@@ -2,8 +2,7 @@ package com.taahyt.pingu.material;
 
 import java.util.Arrays;
 
-public enum Material
-{
+public enum Material {
 
     ACACIA_BOAT(674, false),
     ACACIA_BUTTON(325, true),
@@ -1237,34 +1236,28 @@ public enum Material
     private final int id;
     private final boolean isBlock;
 
-    Material(int id, boolean isBlock)
-    {
+    Material(int id, boolean isBlock) {
         this.id = id;
         this.isBlock = isBlock;
     }
 
-    public int getId()
-    {
+    public int getId() {
         return this.id;
     }
 
-    public String getIdentifier()
-    {
+    public String getIdentifier() {
         return "minecraft:" + this.name().toLowerCase();
     }
 
-    public boolean isBlock()
-    {
+    public boolean isBlock() {
         return this.isBlock;
     }
 
-    public static Material getByIdentifier(String identifier)
-    {
+    public static Material getByIdentifier(String identifier) {
         return Arrays.stream(values()).filter(mat -> mat.getIdentifier().equalsIgnoreCase(identifier)).findFirst().orElse(null);
     }
 
-    public static Material getById(int id)
-    {
+    public static Material getById(int id) {
         return Arrays.stream(values()).filter(mat -> mat.getId() == id).findFirst().orElse(null);
     }
 

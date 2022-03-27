@@ -2,8 +2,7 @@ package com.taahyt.pingu.entity;
 
 import java.util.Arrays;
 
-public enum EntityTypes
-{
+public enum EntityTypes {
 
     AREA_EFFECT_CLOUD(0),
     ARMOR_STAND(1),
@@ -121,28 +120,23 @@ public enum EntityTypes
 
     private final int id;
 
-    EntityTypes(int id)
-    {
+    EntityTypes(int id) {
         this.id = id;
     }
 
-    public int getId()
-    {
+    public int getId() {
         return this.id;
     }
 
-    public String getIdentifier()
-    {
+    public String getIdentifier() {
         return "minecraft:" + this.name().toLowerCase();
     }
 
-    public static EntityTypes getByIdentifier(String identifier)
-    {
+    public static EntityTypes getByIdentifier(String identifier) {
         return Arrays.stream(values()).filter(mat -> mat.getIdentifier().equalsIgnoreCase(identifier)).findFirst().orElse(null);
     }
 
-    public static EntityTypes getById(int id)
-    {
+    public static EntityTypes getById(int id) {
         return Arrays.stream(values()).filter(mat -> mat.getId() == id).findFirst().orElse(null);
     }
 

@@ -14,38 +14,38 @@ import java.util.List;
  * @author mojang
  */
 
-public class Varint21FrameDecoder extends ByteToMessageDecoder
-{
-   protected void decode(ChannelHandlerContext p_130566_, ByteBuf p_130567_, List<Object> p_130568_) {
-      p_130567_.markReaderIndex();
-      byte[] abyte = new byte[3];
+public class Varint21FrameDecoder extends ByteToMessageDecoder {
 
-      for(int i = 0; i < abyte.length; ++i) {
-         if (!p_130567_.isReadable()) {
-            p_130567_.resetReaderIndex();
-            return;
-         }
+    protected void decode(ChannelHandlerContext p_130566_, ByteBuf p_130567_, List<Object> p_130568_) {
+        p_130567_.markReaderIndex();
+        byte[] abyte = new byte[3];
 
-         abyte[i] = p_130567_.readByte();
-         if (abyte[i] >= 0) {
-            PacketBuffer packetBuffer = new PacketBuffer(Unpooled.wrappedBuffer(abyte));
-
-            try {
-               int j = packetBuffer.readVarInt();
-               if (p_130567_.readableBytes() >= j) {
-                  p_130568_.add(p_130567_.readBytes(j));
-                  return;
-               }
-
-               p_130567_.resetReaderIndex();
-            } finally {
-               packetBuffer.release();
+        for (int i = 0; i < abyte.length; ++i) {
+            if (!p_130567_.isReadable()) {
+                p_130567_.resetReaderIndex();
+                return;
             }
 
-            return;
-         }
-      }
+            abyte[i] = p_130567_.readByte();
+            if (abyte[i] >= 0) {
+                PacketBuffer packetBuffer = new PacketBuffer(Unpooled.wrappedBuffer(abyte));
 
-      throw new CorruptedFrameException("length wider than 21-bit");
-   }
+                try {
+                    int j = packetBuffer.readVarInt();
+                    if (p_130567_.readableBytes() >= j) {
+                        p_130568_.add(p_130567_.readBytes(j));
+                        return;
+                    }
+
+                    p_130567_.resetReaderIndex();
+                } finally {
+                    packetBuffer.release();
+                }
+
+                return;
+            }
+        }
+
+        throw new CorruptedFrameException("length wider than 21-bit");
+    }
 }

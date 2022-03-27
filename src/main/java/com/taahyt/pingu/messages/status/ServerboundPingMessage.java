@@ -6,16 +6,14 @@ import com.taahyt.pingu.util.packet.PacketBuffer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 
-public class ServerboundPingMessage extends AbstractMessage
-{
-    public ServerboundPingMessage()
-    {
+public class ServerboundPingMessage extends AbstractMessage {
+
+    public ServerboundPingMessage() {
         super(0x01);
     }
 
     @Override
-    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf)
-    {
+    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf) {
         long payload = buf.readLong();
         ClientboundPingMessage pongMessage = (ClientboundPingMessage) Messages.PONG.getMessage();
         pongMessage.payload = payload;
@@ -23,8 +21,7 @@ public class ServerboundPingMessage extends AbstractMessage
     }
 
     @Override
-    public ByteBuf serialize(ChannelHandlerContext channel)
-    {
+    public ByteBuf serialize(ChannelHandlerContext channel) {
         return null;
     }
 }

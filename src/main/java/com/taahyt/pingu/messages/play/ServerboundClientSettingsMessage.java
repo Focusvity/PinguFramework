@@ -12,8 +12,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.net.InetSocketAddress;
 
-public class ServerboundClientSettingsMessage extends AbstractMessage
-{
+public class ServerboundClientSettingsMessage extends AbstractMessage {
 
     public String locale;
     public byte viewDistance;
@@ -24,15 +23,13 @@ public class ServerboundClientSettingsMessage extends AbstractMessage
     public boolean textFiltering;
     public boolean serverListings;
 
-    public ServerboundClientSettingsMessage()
-    {
+    public ServerboundClientSettingsMessage() {
         super(0x05);
     }
 
 
     @Override
-    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf)
-    {
+    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf) {
         System.out.println("DESERIALIZING CLIENT SETTINGS");
         this.locale = buf.readString();
         this.viewDistance = buf.readByte();
@@ -44,8 +41,7 @@ public class ServerboundClientSettingsMessage extends AbstractMessage
         this.serverListings = buf.readBoolean();
 
         Player player = PinguFramework.getServer().getPlayer((InetSocketAddress) channel.channel().remoteAddress());
-        if (player != null)
-        {
+        if (player != null) {
             player.setLocale(this.locale);
             player.setViewDistance(this.viewDistance);
             player.setChatMode(this.chatMode);
@@ -69,7 +65,8 @@ public class ServerboundClientSettingsMessage extends AbstractMessage
             ClientboundCommandMessage clientboundCommandMessage = new ClientboundCommandMessage();
             channel.writeAndFlush(clientboundCommandMessage.serialize(channel));
 
-            ClientboundPlayerPositionMessage clientboundPlayerPositionMessage = new ClientboundPlayerPositionMessage(new Location(player.getCurrentWorld(), 0, 64, 0), 0);
+            ClientboundPlayerPositionMessage clientboundPlayerPositionMessage = new ClientboundPlayerPositionMessage(
+                new Location(player.getCurrentWorld(), 0, 64, 0), 0);
             channel.writeAndFlush(clientboundPlayerPositionMessage.serialize(channel));
 
             ClientboundPlayerInfoMessage addPlayer = new ClientboundPlayerInfoMessage(ClientboundPlayerInfoMessage.Action.ADD, player);
@@ -83,8 +80,7 @@ public class ServerboundClientSettingsMessage extends AbstractMessage
     }
 
     @Override
-    public ByteBuf serialize(ChannelHandlerContext channel)
-    {
+    public ByteBuf serialize(ChannelHandlerContext channel) {
         return null;
     }
 }

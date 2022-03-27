@@ -8,15 +8,14 @@ import net.querz.nbt.tag.CompoundTag;
 import java.util.Map;
 
 @Data
-public class World
-{
+public class World {
+
     private final String name;
     private final Map<Integer, Entity> entities = Maps.newHashMap();
 
     private CompoundTag dimensionType;
 
-    public int addEntity(Entity entity)
-    {
+    public int addEntity(Entity entity) {
         int id = entities.size();
         this.entities.put(id, entity);
         entity.setId(id);

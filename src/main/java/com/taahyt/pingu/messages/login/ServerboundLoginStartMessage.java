@@ -12,32 +12,28 @@ import lombok.SneakyThrows;
 
 import java.net.InetSocketAddress;
 
-public class ServerboundLoginStartMessage extends AbstractMessage
-{
-    public ServerboundLoginStartMessage()
-    {
+public class ServerboundLoginStartMessage extends AbstractMessage {
+
+    public ServerboundLoginStartMessage() {
         super(0x00);
     }
 
     @SneakyThrows
     @Override
-    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf)
-    {
+    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf) {
         final String name = buf.readString();
         System.out.println("Player Connecting: " + name);
 
         channel.writeAndFlush(new ClientboundSetCompressionMessage().serialize(channel)).sync();
         channel.writeAndFlush(new ClientboundLoginSuccessMessage(name).serialize(channel)).sync();
         Player player = PinguFramework.getServer().getPlayer((InetSocketAddress) channel.channel().remoteAddress());
-        if (player != null)
-        {
+        if (player != null) {
             channel.writeAndFlush(new ClientboundJoinGameMessage(GameMode.CREATIVE, player).serialize(channel));
         }
     }
 
     @Override
-    public ByteBuf serialize(ChannelHandlerContext channel)
-    {
+    public ByteBuf serialize(ChannelHandlerContext channel) {
         return null;
     }
 }

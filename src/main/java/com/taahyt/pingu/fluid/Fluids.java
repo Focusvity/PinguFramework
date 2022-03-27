@@ -2,8 +2,7 @@ package com.taahyt.pingu.fluid;
 
 import java.util.Arrays;
 
-public enum Fluids
-{
+public enum Fluids {
 
     EMPTY(0),
     FLOWING_LAVA(3),
@@ -13,28 +12,23 @@ public enum Fluids
 
     private final int id;
 
-    Fluids(int id)
-    {
+    Fluids(int id) {
         this.id = id;
     }
 
-    public int getId()
-    {
+    public int getId() {
         return this.id;
     }
 
-    public String getIdentifier()
-    {
+    public String getIdentifier() {
         return "minecraft:" + this.name().toLowerCase();
     }
 
-    public static Fluids getByIdentifier(String identifier)
-    {
+    public static Fluids getByIdentifier(String identifier) {
         return Arrays.stream(values()).filter(mat -> mat.getIdentifier().equalsIgnoreCase(identifier)).findFirst().orElse(null);
     }
 
-    public static Fluids getById(int id)
-    {
+    public static Fluids getById(int id) {
         return Arrays.stream(values()).filter(mat -> mat.getId() == id).findFirst().orElse(null);
     }
 

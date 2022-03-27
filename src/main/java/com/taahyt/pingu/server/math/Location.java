@@ -4,30 +4,47 @@ import com.taahyt.pingu.server.World;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-public class Location
-{
-    private final World world;
-    private double x;
-    private double y;
-    private double z;
+public record Location(World world, double x, double y, double z, float pitch, float yaw) {
 
-    private float yaw;
-    private float pitch;
-
-    private Location() {
-        this(null, -1, -1, -1);
+    public Location {
+        yaw = fixYaw(yaw);
     }
 
-    public Location(World world, double x, double y, double z)
-    {
-        this.world = world;
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    public Location(World world, double x, double y, double z) {
+        this(world, x, y, z, 0, 0);
+    }
 
-        this.yaw = 180;
-        this.pitch = 0;
+    public Location x(double newX) {
+        return update(newX, y, z, pitch, yaw);
+    }
+
+    public Location y(double newY) {
+        return update(x, newY, z, pitch, yaw);
+    }
+
+    public Location z(double newZ) {
+        return update(x, y, newZ, pitch, yaw);
+    }
+
+    public Location update(double newX, double newY, double newZ) {
+        return update(newX, newY, newZ, pitch, yaw);
+    }
+
+    public Location update(float newPitch, float newYaw) {
+        return update(x, y, z, newPitch, newYaw);
+    }
+
+    public Location update(double newX, double newY, double newZ, float newPitch, float newYaw) {
+        return new Location(world, newX, newY, newZ, newPitch, newYaw);
+    }
+
+    private float fixYaw(float yaw) {
+        yaw %= 360;
+        if (yaw <= -180.0F) {
+            yaw += 360.0F;
+        } else if (yaw >= 180.0F) {
+            yaw -= 360.0F;
+        }
+        return yaw;
     }
 }

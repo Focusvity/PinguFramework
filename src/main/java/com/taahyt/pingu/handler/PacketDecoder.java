@@ -10,13 +10,12 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
 import java.util.List;
+import java.util.Optional;
 
-public class PacketDecoder extends ByteToMessageDecoder
-{
+public class PacketDecoder extends ByteToMessageDecoder {
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception
-    {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         int i = in.readableBytes();
         if (i != 0) {
             PacketBuffer packetBuffer = new PacketBuffer(in);
@@ -25,15 +24,17 @@ public class PacketDecoder extends ByteToMessageDecoder
 
             Status status = PinguFramework.CLIENTS.getOrDefault(ctx, Status.HANDSHAKING);
 
-            AbstractMessage message = Messages.getById(status, j);
-            if (message != null) {
+            Optional<AbstractMessage> optMessage = Messages.getById(status, j);
+            optMessage.ifPresent(message -> {
                 System.out.println("Incoming packet with length " + i + " and ID " + j);
                 System.out.println("USING " + message.getClass().getName() + " PACKET");
                 message.deserialize(ctx, packetBuffer);
 
                 ByteBuf serializedMsg = message.serialize(ctx);
-                if (serializedMsg != null) ctx.writeAndFlush(serializedMsg);
-            }
+                if (serializedMsg != null) {
+                    ctx.writeAndFlush(serializedMsg);
+                }
+            });
         }
     }
 }

@@ -10,20 +10,16 @@ import io.netty.handler.codec.MessageToByteEncoder;
  * @author mojang
  */
 
-public class Varint21LengthFieldPrepender extends MessageToByteEncoder<ByteBuf>
-{
+public class Varint21LengthFieldPrepender extends MessageToByteEncoder<ByteBuf> {
 
     private static final int MAX_BYTES = 3;
 
-    protected void encode(ChannelHandlerContext p_130571_, ByteBuf p_130572_, ByteBuf p_130573_)
-    {
+    protected void encode(ChannelHandlerContext p_130571_, ByteBuf p_130572_, ByteBuf p_130573_) {
         int i = p_130572_.readableBytes();
         int j = PacketBuffer.getVarIntSize(i);
-        if (j > 3)
-        {
+        if (j > 3) {
             throw new IllegalArgumentException("unable to fit " + i + " into 3");
-        } else
-        {
+        } else {
             PacketBuffer packetBuffer = new PacketBuffer(p_130573_);
             packetBuffer.ensureWritable(j + i);
             packetBuffer.writeVarInt(i);

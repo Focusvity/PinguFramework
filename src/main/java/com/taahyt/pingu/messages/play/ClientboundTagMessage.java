@@ -10,22 +10,19 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.util.List;
 
-public class ClientboundTagMessage extends AbstractMessage
-{
-    public ClientboundTagMessage()
-    {
+public class ClientboundTagMessage extends AbstractMessage {
+
+    public ClientboundTagMessage() {
         super(0x67);
     }
 
     @Override
-    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf)
-    {
+    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf) {
 
     }
 
     @Override
-    public ByteBuf serialize(ChannelHandlerContext channel)
-    {
+    public ByteBuf serialize(ChannelHandlerContext channel) {
         System.out.println("Tags!");
         PacketBuffer buffer = new PacketBuffer();
         buffer.writeVarInt(this.getPacketId());

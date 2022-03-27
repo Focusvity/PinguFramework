@@ -9,42 +9,28 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.net.InetSocketAddress;
 
-public class ServerboundPlayerPositionMessage extends AbstractMessage
-{
-    private double x;
-    private double y;
-    private double z;
+public class ServerboundPlayerPositionMessage extends AbstractMessage {
 
-    private boolean onGround;
-
-    public ServerboundPlayerPositionMessage()
-    {
+    public ServerboundPlayerPositionMessage() {
         super(0x11);
     }
 
-
     @Override
-    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf)
-    {
+    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf) {
         System.out.println("DESERIALIZING PLAYER POS");
-        this.x = buf.readDouble();
-        this.y = buf.readDouble();
-        this.z = buf.readDouble();
-        this.onGround = buf.readBoolean();
+        double x = buf.readDouble();
+        double y = buf.readDouble();
+        double z = buf.readDouble();
+        boolean onGround = buf.readBoolean();
         Player player = PinguFramework.getServer().getPlayer((InetSocketAddress) channel.channel().remoteAddress());
-        if (player != null)
-        {
-            player.getLocation().setX(this.x);
-            player.getLocation().setY(this.y);
-            player.getLocation().setZ(this.z);
-            player.setOnGround(this.onGround);
+        if (player != null) {
+            player.setLocation(player.getLocation().update(x, y, z));
+            player.setOnGround(onGround);
         }
     }
 
     @Override
-    public ByteBuf serialize(ChannelHandlerContext channel)
-    {
+    public ByteBuf serialize(ChannelHandlerContext channel) {
         return null;
     }
-
 }

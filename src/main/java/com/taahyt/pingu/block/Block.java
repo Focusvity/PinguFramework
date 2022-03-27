@@ -3,8 +3,7 @@ package com.taahyt.pingu.block;
 import lombok.Data;
 
 @Data
-public class Block
-{
+public class Block {
 
     private final String identifier;
     private int id;

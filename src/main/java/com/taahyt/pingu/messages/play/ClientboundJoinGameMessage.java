@@ -18,27 +18,24 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
 
-public class ClientboundJoinGameMessage extends AbstractMessage
-{
+public class ClientboundJoinGameMessage extends AbstractMessage {
+
     private final GameMode gameMode;
     private final Player player;
 
-    public ClientboundJoinGameMessage(GameMode gameMode, Player player)
-    {
+    public ClientboundJoinGameMessage(GameMode gameMode, Player player) {
         super(0x26);
         this.gameMode = gameMode;
         this.player = player;
     }
 
     @Override
-    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf)
-    {
+    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf) {
 
     }
 
     @Override
-    public ByteBuf serialize(ChannelHandlerContext channel)
-    {
+    public ByteBuf serialize(ChannelHandlerContext channel) {
         System.out.println("CLIENTBOUND JOIN GAME");
         PacketBuffer buffer = new PacketBuffer();
 
@@ -48,17 +45,14 @@ public class ClientboundJoinGameMessage extends AbstractMessage
 
         world.addEntity(this.player);
 
-
         buffer.writeVarInt(this.getPacketId());
         buffer.writeInt(this.player.getId());
         buffer.writeBoolean(false);
         buffer.writeByte(this.gameMode.getId());
         buffer.writeByte(-1);
 
-
         File file = new File("./test.snbt");
-        try
-        {
+        try {
             CompoundTag compoundTag = (CompoundTag) new SNBTDeserializer().fromStream(new FileInputStream(file));
             CompoundTag dimensionTypes = compoundTag.getCompoundTag("minecraft:dimension_type");
 
@@ -73,16 +67,14 @@ public class ClientboundJoinGameMessage extends AbstractMessage
             buffer.writeNbt(compoundTag);
             dimensionTypes.getListTag("value").asCompoundTagList().forEach(tag ->
             {
-                if (tag.getString("name").equalsIgnoreCase("minecraft:overworld"))
-                {
+                if (tag.getString("name").equalsIgnoreCase("minecraft:overworld")) {
                     CompoundTag dimensionType = tag.getCompoundTag("element");
                     buffer.writeNbt(dimensionType);
                     world.setDimensionType(dimensionType);
                 }
             });
 
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

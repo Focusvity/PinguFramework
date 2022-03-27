@@ -7,17 +7,15 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.SneakyThrows;
 
-public class ServerboundRequestMessage extends AbstractMessage
-{
-    public ServerboundRequestMessage()
-    {
+public class ServerboundRequestMessage extends AbstractMessage {
+
+    public ServerboundRequestMessage() {
         super(0x00);
     }
 
     @SneakyThrows
     @Override
-    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf)
-    {
+    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf) {
         System.out.println("Deserializing Request");
 
         ClientboundRequestMessage message = (ClientboundRequestMessage) Messages.RESPONSE.getMessage();
@@ -25,8 +23,7 @@ public class ServerboundRequestMessage extends AbstractMessage
     }
 
     @Override
-    public ByteBuf serialize(ChannelHandlerContext channel)
-    {
+    public ByteBuf serialize(ChannelHandlerContext channel) {
         return null;
     }
 }

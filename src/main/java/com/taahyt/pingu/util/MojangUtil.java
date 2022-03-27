@@ -24,8 +24,8 @@ import java.util.concurrent.CompletableFuture;
  * @author Taah
  */
 
-public class MojangUtil
-{
+public class MojangUtil {
+
     /**
      * Skin Cache
      */
@@ -37,50 +37,44 @@ public class MojangUtil
      * @param name Player username
      * @return UUID in String format
      */
-    public static String getUUID(String name)
-    {
+    public static String getUUID(String name) {
         CloseableHttpClient client = HttpClients.createDefault();
         HttpGet get = new HttpGet("https://api.mojang.com/users/profiles/minecraft/" + name);
-        try
-        {
+        try {
             HttpResponse response = client.execute(get);
-            if (response.getStatusLine().getStatusCode() == 200)
-            {
+            if (response.getStatusLine().getStatusCode() == 200) {
                 String json = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
                 JSONObject object = new JSONObject(json);
                 client.close();
 
                 return new StringBuilder(object.getString("id"))
-                        .insert(8, "-").insert(13, "-").insert(18, "-").insert(23, "-").toString();
+                    .insert(8, "-").insert(13, "-").insert(18, "-").insert(23, "-").toString();
             } else {
                 return "not found";
             }
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             //e.printStackTrace();
             return "not found";
         }
     }
 
-    public static SkinProperty getSkinProperty(UUID uuid)
-    {
+    public static SkinProperty getSkinProperty(UUID uuid) {
         CloseableHttpClient client = HttpClients.createDefault();
-        HttpGet get = new HttpGet("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString().replace("-", "") + "?unsigned=false");
-        try
-        {
+        HttpGet get = new HttpGet(
+            "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString().replace("-", "") + "?unsigned=false");
+        try {
             HttpResponse response = client.execute(get);
-            if (response.getStatusLine().getStatusCode() == 200)
-            {
+            if (response.getStatusLine().getStatusCode() == 200) {
                 String json = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
                 JSONObject object = new JSONObject(json);
                 client.close();
 
-                return new SkinProperty(object.getJSONArray("properties").getJSONObject(0).getString("value"), object.getJSONArray("properties").getJSONObject(0).getString("signature"));
+                return new SkinProperty(object.getJSONArray("properties").getJSONObject(0).getString("value"),
+                    object.getJSONArray("properties").getJSONObject(0).getString("signature"));
             } else {
                 return null;
             }
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             //e.printStackTrace();
             return null;
         }
@@ -93,14 +87,12 @@ public class MojangUtil
      * @return A completable future containing an array of data (0: value, 1: signature)
      */
     @SneakyThrows
-    public static CompletableFuture<String[]> getSkinData(String username)
-    {
+    public static CompletableFuture<String[]> getSkinData(String username) {
         return CompletableFuture.supplyAsync(() ->
         {
             CloseableHttpClient client = HttpClients.createDefault();
             HttpGet get = new HttpGet("https://api.mineskin.org/generate/user/" + getUUID(username));
-            try
-            {
+            try {
                 HttpResponse response = client.execute(get);
                 String json = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
                 JSONObject object = new JSONObject(json);
@@ -109,17 +101,14 @@ public class MojangUtil
 
                 client.close();
                 String[] data = SKIN_CACHE.put(username, new String[]{value, signature});
-                new Timer().schedule(new TimerTask()
-                {
+                new Timer().schedule(new TimerTask() {
                     @Override
-                    public void run()
-                    {
+                    public void run() {
                         SKIN_CACHE.remove(username);
                     }
                 }, 5000);
                 return new String[]{value, signature};
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
                 return null;
             }

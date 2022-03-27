@@ -9,31 +9,27 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.net.InetSocketAddress;
 
-public class ServerboundPlayerMovementMessage extends AbstractMessage
-{
+public class ServerboundPlayerMovementMessage extends AbstractMessage {
+
     private boolean onGround;
 
-    public ServerboundPlayerMovementMessage()
-    {
+    public ServerboundPlayerMovementMessage() {
         super(0x14);
     }
 
 
     @Override
-    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf)
-    {
+    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf) {
         System.out.println("DESERIALIZING PLAYER MOVEMENT");
         this.onGround = buf.readBoolean();
         Player player = PinguFramework.getServer().getPlayer((InetSocketAddress) channel.channel().remoteAddress());
-        if (player != null)
-        {
+        if (player != null) {
             player.setOnGround(this.onGround);
         }
     }
 
     @Override
-    public ByteBuf serialize(ChannelHandlerContext channel)
-    {
+    public ByteBuf serialize(ChannelHandlerContext channel) {
         return null;
     }
 

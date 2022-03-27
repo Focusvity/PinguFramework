@@ -8,25 +8,22 @@ import lombok.SneakyThrows;
 
 import java.util.UUID;
 
-public class ClientboundSpawnPlayerMessage extends AbstractMessage
-{
+public class ClientboundSpawnPlayerMessage extends AbstractMessage {
+
     public UUID uuid;
 
-    public ClientboundSpawnPlayerMessage()
-    {
+    public ClientboundSpawnPlayerMessage() {
         super(0x04);
     }
 
     @Override
-    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf)
-    {
+    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf) {
 
     }
 
     @SneakyThrows
     @Override
-    public ByteBuf serialize(ChannelHandlerContext channel)
-    {
+    public ByteBuf serialize(ChannelHandlerContext channel) {
         try {
             System.out.println("Spawn Player");
             PacketBuffer buffer = new PacketBuffer();

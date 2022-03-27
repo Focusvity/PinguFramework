@@ -27,17 +27,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.jetbrains.annotations.NotNull;
 
-public class PinguFramework
-{
+public class PinguFramework {
+
     @Getter
     private static final Server server = new Server();
 
     public static final Map<ChannelHandlerContext, Status> CLIENTS = new HashMap<>();
 
     @SneakyThrows
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         Registries.registerAll(new File("./generated/reports/registries.json"));
         File blockTagsDir = new File("./generated/data/minecraft/tags/blocks");
         File itemTagsDir = new File("./generated/data/minecraft/tags/items");
@@ -53,10 +53,10 @@ public class PinguFramework
 
         TagUtil.fixedQueues();
 
-        EnumUtil.generateEnumMaterial(new File("./generated/Material.txt"));
+        /*EnumUtil.generateEnumMaterial(new File("./generated/Material.txt"));
         EnumUtil.generateEnumEntityType(new File("./generated/EntityType.txt"));
         EnumUtil.generateEnumGameEvents(new File("./generated/GameEvents.txt"));
-        EnumUtil.generateEnumFluids(new File("./generated/Fluids.txt"));
+        EnumUtil.generateEnumFluids(new File("./generated/Fluids.txt"));*/
 
         System.out.println("Loaded " + TagUtil.BLOCK_TAGS.size() + " block tags!");
         System.out.println("Loaded " + TagUtil.ITEM_TAGS.size() + " item tags!");
@@ -64,11 +64,9 @@ public class PinguFramework
         System.out.println("Loaded " + TagUtil.FLUIDS.size() + " fluid tags!");
         System.out.println("Loaded " + TagUtil.GAME_EVENTS.size() + " game events tags!");
 
-        new Timer("tick").schedule(new TimerTask()
-        {
+        new Timer("tick").schedule(new TimerTask() {
             @Override
-            public void run()
-            {
+            public void run() {
                 CLIENTS.keySet().stream().filter(client -> CLIENTS.get(client) == Status.PLAY).forEach(client -> {
                     System.out.println("Updated time for " + client.channel().remoteAddress());
                     client.writeAndFlush(new ClientboundTimeUpdateMessage().serialize(client));
@@ -84,15 +82,13 @@ public class PinguFramework
             serverBootstrap.channel(NioServerSocketChannel.class);
             serverBootstrap.localAddress(new InetSocketAddress("localhost", 25565));
 
-            serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>()
-            {
-                protected void initChannel(SocketChannel socketChannel) throws Exception
-                {
+            serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
+                protected void initChannel(@NotNull SocketChannel socketChannel) {
                     socketChannel.pipeline().
-                            addLast("timeout", new ReadTimeoutHandler(30)).
-                            addLast("splitter", new Varint21FrameDecoder()).
-                            addLast("prepender", new Varint21LengthFieldPrepender()).
-                            addLast("decoder", new PacketDecoder());
+                        addLast("timeout", new ReadTimeoutHandler(30)).
+                        addLast("splitter", new Varint21FrameDecoder()).
+                        addLast("prepender", new Varint21LengthFieldPrepender()).
+                        addLast("decoder", new PacketDecoder());
                 }
             });
             ChannelFuture channelFuture = serverBootstrap.bind().sync();

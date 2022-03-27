@@ -17,8 +17,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class Player extends Entity
-{
+public class Player extends Entity {
+
     private final UUID uuid;
     private final String name;
     private final ChannelHandlerContext connection;
@@ -41,14 +41,11 @@ public class Player extends Entity
     private Location location;
     private boolean onGround;
 
-    public Player(UUID uuid, String name, ChannelHandlerContext connection, InetSocketAddress address)
-    {
+    public Player(UUID uuid, String name, ChannelHandlerContext connection, InetSocketAddress address) {
         super(EntityTypes.PLAYER);
         this.uuid = uuid;
         this.name = name;
         this.connection = connection;
         this.address = address;
     }
-
-
 }

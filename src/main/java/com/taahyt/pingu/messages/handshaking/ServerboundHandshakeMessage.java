@@ -9,17 +9,15 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.SneakyThrows;
 
 
-public class ServerboundHandshakeMessage extends AbstractMessage
-{
-    public ServerboundHandshakeMessage()
-    {
+public class ServerboundHandshakeMessage extends AbstractMessage {
+
+    public ServerboundHandshakeMessage() {
         super(0x00);
     }
 
     @SneakyThrows
     @Override
-    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf)
-    {
+    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf) {
         System.out.println("Readable Bytes:" + buf.readableBytes());
 
         System.out.println("Deserializing Handshake");
@@ -41,8 +39,7 @@ public class ServerboundHandshakeMessage extends AbstractMessage
     }
 
     @Override
-    public ByteBuf serialize(ChannelHandlerContext channel)
-    {
+    public ByteBuf serialize(ChannelHandlerContext channel) {
         return null;
     }
 }

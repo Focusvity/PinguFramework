@@ -14,27 +14,24 @@ import lombok.SneakyThrows;
 import java.net.InetSocketAddress;
 import java.util.UUID;
 
-public class ClientboundLoginSuccessMessage extends AbstractMessage
-{
+public class ClientboundLoginSuccessMessage extends AbstractMessage {
+
     @Getter
     private final String username;
 
-    public ClientboundLoginSuccessMessage(String username)
-    {
+    public ClientboundLoginSuccessMessage(String username) {
         super(0x02);
         this.username = username;
     }
 
     @Override
-    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf)
-    {
+    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf) {
 
     }
 
     @SneakyThrows
     @Override
-    public ByteBuf serialize(ChannelHandlerContext channel)
-    {
+    public ByteBuf serialize(ChannelHandlerContext channel) {
         try {
             System.out.println("Login Success?");
             PacketBuffer buffer = new PacketBuffer();

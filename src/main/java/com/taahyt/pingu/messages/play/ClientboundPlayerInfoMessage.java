@@ -6,26 +6,24 @@ import com.taahyt.pingu.util.packet.PacketBuffer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 
-public class ClientboundPlayerInfoMessage extends AbstractMessage
-{
+public class ClientboundPlayerInfoMessage extends AbstractMessage {
+
     private final Action action;
     private final Player player;
-    public ClientboundPlayerInfoMessage(Action action, Player player)
-    {
+
+    public ClientboundPlayerInfoMessage(Action action, Player player) {
         super(0x36);
         this.action = action;
         this.player = player;
     }
 
     @Override
-    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf)
-    {
+    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf) {
 
     }
 
     @Override
-    public ByteBuf serialize(ChannelHandlerContext channel)
-    {
+    public ByteBuf serialize(ChannelHandlerContext channel) {
         System.out.println("Player Info");
         PacketBuffer buffer = new PacketBuffer();
         buffer.writeVarInt(this.getPacketId());
@@ -33,8 +31,7 @@ public class ClientboundPlayerInfoMessage extends AbstractMessage
         buffer.writeVarInt(1);
         buffer.writeUUID(this.player.getUuid());
 
-        switch (action)
-        {
+        switch (action) {
             case ADD:
                 buffer.writeString(this.player.getName());
                 buffer.writeVarInt(1);
@@ -60,13 +57,12 @@ public class ClientboundPlayerInfoMessage extends AbstractMessage
         ADD(0), UPDATE_GAMEMODE(1), UPDATE_LATENCY(2), UPDATE_DISPLAY_NAME(3), REMOVE(4);
 
         private final int id;
-        Action(int id)
-        {
+
+        Action(int id) {
             this.id = id;
         }
 
-        public int getId()
-        {
+        public int getId() {
             return this.id;
         }
     }

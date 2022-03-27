@@ -5,23 +5,20 @@ import com.taahyt.pingu.util.packet.PacketBuffer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 
-public class ClientboundPingMessage extends AbstractMessage
-{
+public class ClientboundPingMessage extends AbstractMessage {
+
     public long payload;
 
-    public ClientboundPingMessage()
-    {
+    public ClientboundPingMessage() {
         super(0x01);
     }
 
     @Override
-    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf)
-    {
+    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf) {
     }
 
     @Override
-    public ByteBuf serialize(ChannelHandlerContext channel)
-    {
+    public ByteBuf serialize(ChannelHandlerContext channel) {
         PacketBuffer buffer = new PacketBuffer();
         buffer.writeVarInt(0x01);
         buffer.writeLong(payload);

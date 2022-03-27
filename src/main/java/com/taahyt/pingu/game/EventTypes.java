@@ -2,8 +2,7 @@ package com.taahyt.pingu.game;
 
 import java.util.Arrays;
 
-public enum EventTypes
-{
+public enum EventTypes {
 
     BLOCK_ATTACH(0),
     BLOCK_CHANGE(1),
@@ -53,28 +52,23 @@ public enum EventTypes
 
     private final int id;
 
-    EventTypes(int id)
-    {
+    EventTypes(int id) {
         this.id = id;
     }
 
-    public int getId()
-    {
+    public int getId() {
         return this.id;
     }
 
-    public String getIdentifier()
-    {
+    public String getIdentifier() {
         return "minecraft:" + this.name().toLowerCase();
     }
 
-    public static EventTypes getByIdentifier(String identifier)
-    {
+    public static EventTypes getByIdentifier(String identifier) {
         return Arrays.stream(values()).filter(mat -> mat.getIdentifier().equalsIgnoreCase(identifier)).findFirst().orElse(null);
     }
 
-    public static EventTypes getById(int id)
-    {
+    public static EventTypes getById(int id) {
         return Arrays.stream(values()).filter(mat -> mat.getId() == id).findFirst().orElse(null);
     }
 

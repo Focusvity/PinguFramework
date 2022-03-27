@@ -18,22 +18,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-public class ClientboundCommandMessage extends AbstractMessage
-{
-    public ClientboundCommandMessage()
-    {
+public class ClientboundCommandMessage extends AbstractMessage {
+
+    public ClientboundCommandMessage() {
         super(0x12);
     }
 
     @Override
-    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf)
-    {
+    public void deserialize(ChannelHandlerContext channel, PacketBuffer buf) {
 
     }
 
     @Override
-    public ByteBuf serialize(ChannelHandlerContext channel)
-    {
+    public ByteBuf serialize(ChannelHandlerContext channel) {
         System.out.println("Command");
         PacketBuffer buffer = new PacketBuffer();
         buffer.writeVarInt(this.getPacketId());
@@ -46,7 +43,7 @@ public class ClientboundCommandMessage extends AbstractMessage
         Object2IntMap<CommandNode<SuggestionProvider<Object>>> object2IntMap = enumerateNodes(root);
 
         buffer.writeCollection(nodes, (packetBuffer, objectCommandNode) ->
-                writeNode(packetBuffer, objectCommandNode, object2IntMap));
+            writeNode(packetBuffer, objectCommandNode, object2IntMap));
         buffer.writeVarInt(object2IntMap.getInt(root));
 
         return buffer;
@@ -54,24 +51,21 @@ public class ClientboundCommandMessage extends AbstractMessage
 
     /**
      * Yoinked from MC's Game Code
+     *
      * @author mojang
      */
-    private static Object2IntMap<CommandNode<SuggestionProvider<Object>>> enumerateNodes(RootCommandNode<SuggestionProvider<Object>> commandTree)
-    {
+    private static Object2IntMap<CommandNode<SuggestionProvider<Object>>> enumerateNodes(RootCommandNode<SuggestionProvider<Object>> commandTree) {
         Object2IntMap<CommandNode<SuggestionProvider<Object>>> object2IntMap = new Object2IntOpenHashMap<>();
         Queue<CommandNode<SuggestionProvider<Object>>> queue = Queues.newArrayDeque();
         queue.add(commandTree);
 
         CommandNode<SuggestionProvider<Object>> commandNode;
-        while ((commandNode = queue.poll()) != null)
-        {
-            if (!object2IntMap.containsKey(commandNode))
-            {
+        while ((commandNode = queue.poll()) != null) {
+            if (!object2IntMap.containsKey(commandNode)) {
                 int i = object2IntMap.size();
                 object2IntMap.put(commandNode, i);
                 queue.addAll(commandNode.getChildren());
-                if (commandNode.getRedirect() != null)
-                {
+                if (commandNode.getRedirect() != null) {
                     queue.add(commandNode.getRedirect());
                 }
             }
@@ -82,32 +76,27 @@ public class ClientboundCommandMessage extends AbstractMessage
 
     /**
      * Yoinked from MC's Game Code
+     *
      * @author mojang
      */
-    private static void writeNode(PacketBuffer buf, CommandNode<SuggestionProvider<Object>> node, Map<CommandNode<SuggestionProvider<Object>>, Integer> nodeToIndex)
-    {
+    private static void writeNode(PacketBuffer buf, CommandNode<SuggestionProvider<Object>> node,
+        Map<CommandNode<SuggestionProvider<Object>>, Integer> nodeToIndex) {
         byte b = 0;
-        if (node.getRedirect() != null)
-        {
+        if (node.getRedirect() != null) {
             b = (byte) (b | 8);
         }
 
-        if (node.getCommand() != null)
-        {
+        if (node.getCommand() != null) {
             b = (byte) (b | 4);
         }
 
-        if (node instanceof ArgumentCommandNode)
-        {
+        if (node instanceof ArgumentCommandNode) {
             b = (byte) (b | 2);
-            if (((ArgumentCommandNode) node).getCustomSuggestions() != null)
-            {
+            if (((ArgumentCommandNode) node).getCustomSuggestions() != null) {
                 b = (byte) (b | 16);
             }
-        } else
-        {
-            if (!(node instanceof LiteralCommandNode))
-            {
+        } else {
+            if (!(node instanceof LiteralCommandNode)) {
                 throw new UnsupportedOperationException("Unknown node type " + node);
             }
 
@@ -117,13 +106,11 @@ public class ClientboundCommandMessage extends AbstractMessage
         buf.writeByte(b);
         buf.writeVarInt(node.getChildren().size());
 
-        for (CommandNode<SuggestionProvider<Object>> commandNode : node.getChildren())
-        {
+        for (CommandNode<SuggestionProvider<Object>> commandNode : node.getChildren()) {
             buf.writeVarInt(nodeToIndex.get(commandNode));
         }
 
-        if (node.getRedirect() != null)
-        {
+        if (node.getRedirect() != null) {
             buf.writeVarInt(nodeToIndex.get(node.getRedirect()));
         }
 
