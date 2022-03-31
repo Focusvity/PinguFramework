@@ -1,8 +1,6 @@
 package com.taahyt.pingu.server.math;
 
 import com.taahyt.pingu.server.World;
-import lombok.Getter;
-import lombok.Setter;
 
 public record Location(World world, double x, double y, double z, float pitch, float yaw) {
 
